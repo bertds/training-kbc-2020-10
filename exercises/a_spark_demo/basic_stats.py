@@ -20,6 +20,8 @@ frame = spark.read.csv(str(csv_file_path), sep=";", header=True)
 frame.show()
 frame.printSchema()
 
+# The schema property is an attribute of a DataFrame. Unlike the `printSchema`
+# method, you can do something with this property's (return) value.
 print(frame.schema)
 print(frame.columns)
 frame.describe().show(truncate=False)

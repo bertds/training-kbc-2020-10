@@ -23,7 +23,9 @@ dataframe = spark.range(5).withColumn(
 )  # .groupBy(col("id") % 10)  # transformatie
 print(time.time() - t1)
 dataframe.printSchema()
-print(dataframe.count())  # This is an action: it triggers the executors to do work.
+print(
+    dataframe.count()
+)  # This is an action: it triggers the executors to do work.
 t2 = time.time()
 
 print(t2 - t1)
@@ -47,8 +49,12 @@ print(df.rdd.map(lambda row: row[1].upper()).collect())
 #
 #
 def titular_mapping(row):
-    print("this is all executed on the workers, this is not the driver context")
+    print(
+        "this is all executed on the workers, this is not the driver context"
+    )
     return row[2].title(), row[1].lower()
+
+
 #
 #
 print(df.rdd.map(titular_mapping).collect())
