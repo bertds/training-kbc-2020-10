@@ -1,12 +1,11 @@
-from datetime import date
 import datetime as dt
+from datetime import date
 
 from pyspark.sql import SparkSession
 from pyspark.sql.types import DateType, StructField, StructType, StringType, BooleanType
 
 from exercises.c_labellers.dates import (
     label_weekend,
-    label_holidays3,
     is_belgian_holiday,
     label_holidays2,
 )
@@ -45,26 +44,27 @@ def test_label_holidays():
     input = spark.createDataFrame(
         [
             (date(2019, 1, 1), "foo"),  # New Year's
-            (date(2019, 7, 21), "bar"),  # National holiday
-            (date(2019, 12, 6), "fubar"),
-        ],  # Saint-Nicholas
+            (date(2019, 7, 21), "bar"),  # Belgian national holiday
+            (date(2019, 12, 6), "fubar"),  # Saint-Nicholas
+        ],
         schema=StructType(fields[:2]),
     )
-    output = label_holidays2(input)
-    output.show()
+
+    result = label_holidays2(input)
+
     expected = spark.createDataFrame(
         [
-            (date(2019, 1, 1), "foo", True),  # New Year's
+            (date(2019, 1, 1), "foo", True),
             (
                 date(2019, 7, 21),
                 "bar",
                 True,
-            ),  # National holiday
+            ),
             (date(2019, 12, 6), "fubar", False),
-        ],  # Saint-Nicholas
+        ],
         schema=StructType(fields),
     )
-    assert_frames_functionally_equivalent(output, expected, False)
+    assert_frames_functionally_equivalent(result, expected, False)
 
     # Notes: this test highlights well that tests are a form of up-to-date documentation.
     # It also protects somewhat against future changes (what if someone changes the
